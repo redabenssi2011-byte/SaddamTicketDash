@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerUid;
+    }
+
+    // Bots collection
+    match /bots/{botId} {
+      allow read, write: if true;
+    }
+
+    // Panels collection
+    match /panels/{panelId} {
+      allow read, write: if true;
+    }
+
+    // Tickets collection
+    match /tickets/{ticketId} {
+      allow read, write: if true;
+    }
+  }
+}

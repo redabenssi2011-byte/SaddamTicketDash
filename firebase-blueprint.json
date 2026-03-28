@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Bot": {
+      "title": "Discord Bot",
+      "description": "Information about a Discord bot added by a user.",
+      "type": "object",
+      "properties": {
+        "token": { "type": "string", "description": "The Discord bot token (encrypted or server-side only ideally, but stored for bot functionality)." },
+        "name": { "type": "string", "description": "The bot's username." },
+        "avatar": { "type": "string", "description": "URL to the bot's avatar." },
+        "ownerUid": { "type": "string", "description": "Firebase UID of the user who added the bot." },
+        "botId": { "type": "string", "description": "The Discord user ID of the bot." }
+      },
+      "required": ["token", "name", "ownerUid", "botId"]
+    },
+    "Panel": {
+      "title": "Ticket Panel",
+      "description": "Configuration for a ticket panel in a specific Discord server.",
+      "type": "object",
+      "properties": {
+        "botId": { "type": "string", "description": "ID of the bot managing this panel." },
+        "guildId": { "type": "string", "description": "Discord Guild ID where the panel is located." },
+        "channelId": { "type": "string", "description": "Discord Channel ID where the panel message is sent." },
+        "title": { "type": "string", "description": "Embed title." },
+        "description": { "type": "string", "description": "Embed description." },
+        "imageUrl": { "type": "string", "description": "Optional image URL for the embed." },
+        "buttons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "value": { "type": "string" },
+              "style": { "type": "string", "enum": ["Primary", "Secondary", "Success", "Danger"] }
+            }
+          }
+        },
+        "ownerUid": { "type": "string", "description": "Firebase UID of the panel creator." }
+      },
+      "required": ["botId", "guildId", "channelId", "title", "ownerUid"]
+    },
+    "Ticket": {
+      "title": "Active Ticket",
+      "description": "Information about an open ticket channel.",
+      "type": "object",
+      "properties": {
+        "panelId": { "type": "string" },
+        "guildId": { "type": "string" },
+        "channelId": { "type": "string" },
+        "creatorId": { "type": "string", "description": "Discord ID of the user who opened the ticket." },
+        "status": { "type": "string", "enum": ["open", "closed"] }
+      },
+      "required": ["panelId", "guildId", "channelId", "creatorId", "status"]
+    }
+  },
+  "firestore": {
+    "/bots/{botId}": { "schema": "Bot", "description": "Collection of bots added to the system." },
+    "/panels/{panelId}": { "schema": "Panel", "description": "Collection of ticket panel configurations." },
+    "/tickets/{ticketId}": { "schema": "Ticket", "description": "Collection of active tickets." }
+  }
+}
